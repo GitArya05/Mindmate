@@ -9,7 +9,9 @@ import SoundPlayer from '@/components/SoundPlayer';
 import ChatWithAI from '@/components/ChatWithAI';
 import CommunityBoard from '@/components/CommunityBoard';
 import WelcomeExperience from '@/components/WelcomeExperience';
+import UrgentHelpSection from '@/components/UrgentHelpSection';
 import { getCurrentUser } from '@/lib/firebase';
+import { motion } from 'framer-motion';
 
 const Home = () => {
   const [greeting, setGreeting] = useState('Good day');
@@ -59,24 +61,43 @@ const Home = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Soft pink background decoration
+  const SoftPinkBackground = () => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none -z-20">
+      <div className="absolute top-0 right-0 w-full h-full bg-[#FFD1DC] opacity-10 rounded-full blur-3xl transform translate-x-1/3 translate-y-1/4"></div>
+      <div className="absolute bottom-0 left-0 w-full h-full bg-[#A7C7E7] opacity-10 rounded-full blur-3xl transform -translate-x-1/3 translate-y-1/4"></div>
+    </div>
+  );
+
   return (
-    <div className="flex flex-col min-h-screen bg-neutral-50 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-100 transition-colors duration-300">
+    <div className="flex flex-col min-h-screen bg-background text-foreground transition-colors duration-300 relative">
+      {/* Soft background decoration */}
+      <SoftPinkBackground />
+      
       <Header userDisplayName={userDisplayName} userInitials={userInitials} />
       
-      <main className="flex-1 container mx-auto px-4 py-6 pb-20 md:pb-6">
+      <main className="flex-1 container mx-auto px-4 py-6 pb-20 md:pb-6 relative z-10">
         {/* Welcome Experience with Carousel and Quote */}
         <WelcomeExperience greeting={greeting} userDisplayName={userDisplayName} />
 
+        {/* Urgent Help Section - Always visible */}
+        <UrgentHelpSection />
+
         {/* Features Grid - Only shown after welcome experience */}
         {showFeatures && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fadeIn">
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             <MoodGraph />
             <BreathingExercise />
             <SelfCareChecklist />
             <SoundPlayer />
             <ChatWithAI />
             <CommunityBoard />
-          </div>
+          </motion.div>
         )}
       </main>
 
