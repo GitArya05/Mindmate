@@ -3,49 +3,80 @@
 @tailwind utilities;
 
 :root {
-      --background: 0 0% 100%;
---foreground: 20 14.3% 4.1%;
---muted: 60 4.8% 95.9%;
---muted-foreground: 25 5.3% 44.7%;
---popover: 0 0% 100%;
---popover-foreground: 20 14.3% 4.1%;
---card: 0 0% 100%;
---card-foreground: 20 14.3% 4.1%;
---border: 20 5.9% 90%;
---input: 20 5.9% 90%;
---primary: 207 90% 54%;
---primary-foreground: 211 100% 99%;
---secondary: 60 4.8% 95.9%;
---secondary-foreground: 24 9.8% 10%;
---accent: 60 4.8% 95.9%;
---accent-foreground: 24 9.8% 10%;
---destructive: 0 84.2% 60.2%;
---destructive-foreground: 60 9.1% 97.8%;
---ring: 20 14.3% 4.1%;
---radius: 0.5rem;
-  }
-  .dark {
-      --background: 240 10% 3.9%;
---foreground: 0 0% 98%;
---muted: 240 3.7% 15.9%;
---muted-foreground: 240 5% 64.9%;
---popover: 240 10% 3.9%;
---popover-foreground: 0 0% 98%;
---card: 240 10% 3.9%;
---card-foreground: 0 0% 98%;
---border: 240 3.7% 15.9%;
---input: 240 3.7% 15.9%;
---primary: 207 90% 54%;
---primary-foreground: 211 100% 99%;
---secondary: 240 3.7% 15.9%;
---secondary-foreground: 0 0% 98%;
---accent: 240 3.7% 15.9%;
---accent-foreground: 0 0% 98%;
---destructive: 0 62.8% 30.6%;
---destructive-foreground: 0 0% 98%;
---ring: 240 4.9% 83.9%;
---radius: 0.5rem;
-  }
+  /* Soft MindMate Palette (Light Mode) */
+  --background: 40 33% 97%; /* #FDF6F0 soft beige background */
+  --foreground: 0 0% 20%; /* #333333 soft charcoal for text */
+  --muted: 35 33% 97%; /* Muted beige */
+  --muted-foreground: 0 0% 45%; /* Medium gray for subtle text */
+  --popover: 40 33% 97%;
+  --popover-foreground: 0 0% 20%;
+  --card: 0 0% 100%; /* White for card backgrounds */
+  --card-foreground: 0 0% 20%;
+  
+  --border: 35 25% 90%;
+  --input: 35 25% 90%;
+  
+  /* Soft blue for primary elements */
+  --primary: 207 60% 75%; /* #A7C7E7 soft blue */
+  --primary-foreground: 0 0% 20%;
+  
+  /* Muted green for secondary elements */
+  --secondary: 140 30% 77%; /* #B2D8B2 muted green */
+  --secondary-foreground: 0 0% 20%;
+  
+  /* Lavender accent */
+  --accent: 240 67% 94%; /* #E6E6FA lavender */
+  --accent-foreground: 0 0% 20%;
+  
+  /* Warm coral for attention elements */
+  --destructive: 6 100% 87%; /* #FFADAD warm coral */
+  --destructive-foreground: 0 0% 20%;
+  
+  /* Soft yellow highlight */
+  --highlight: 55 85% 85%; /* #FFF4B1 warm yellow */
+  --highlight-foreground: 0 0% 20%;
+  
+  --ring: 207 60% 75%; /* Match primary */
+  --radius: 1rem; /* Increased rounding */
+}
+
+.dark {
+  /* Soft MindMate Palette (Dark Mode) */
+  --background: 220 25% 15%; /* Dark soft blue-gray */
+  --foreground: 0 0% 98%;
+  --muted: 220 20% 25%;
+  --muted-foreground: 220 15% 75%;
+  --popover: 220 25% 15%;
+  --popover-foreground: 0 0% 98%;
+  --card: 220 25% 18%;
+  --card-foreground: 0 0% 98%;
+  
+  --border: 220 15% 30%;
+  --input: 220 15% 30%;
+  
+  /* Darkened soft blue for primary elements */
+  --primary: 207 50% 60%; /* Darkened soft blue */
+  --primary-foreground: 0 0% 98%;
+  
+  /* Darkened muted green for secondary elements */
+  --secondary: 140 25% 50%; /* Darkened muted green */
+  --secondary-foreground: 0 0% 98%;
+  
+  /* Darkened lavender accent */
+  --accent: 240 40% 50%; /* Darkened lavender */
+  --accent-foreground: 0 0% 98%;
+  
+  /* Darkened warm coral */
+  --destructive: 6 70% 50%; /* Darkened warm coral */
+  --destructive-foreground: 0 0% 98%;
+  
+  /* Darkened soft yellow */
+  --highlight: 55 60% 60%; /* Darkened warm yellow */
+  --highlight-foreground: 0 0% 98%;
+  
+  --ring: 207 50% 60%; /* Match primary */
+  --radius: 1rem; /* Increased rounding */
+}
 
 @layer base {
   * {

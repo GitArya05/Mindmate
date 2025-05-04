@@ -1,6 +1,56 @@
 import { useState } from 'react';
 import { MoodType } from '@/types';
 import { useMoodStore } from '@/hooks/useMoodStore';
+import { motion } from 'framer-motion';
+
+// SVG Wave Decorative Element
+const MoodTrackerWave = () => (
+  <svg 
+    className="absolute top-0 right-0 w-full h-12 -z-10 text-primary/5"
+    viewBox="0 0 1200 120" 
+    preserveAspectRatio="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path 
+      d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" 
+      fill="currentColor"
+    />
+  </svg>
+);
+
+interface MoodButtonProps {
+  type: MoodType;
+  emoji: string;
+  label: string;
+  selected: boolean;
+  onClick: () => void;
+}
+
+const MoodButton = ({ type, emoji, label, selected, onClick }: MoodButtonProps) => {
+  // Color schemes for different moods
+  const moodColors = {
+    happy: 'bg-highlight/20 hover:bg-highlight/30 dark:bg-highlight/10 dark:hover:bg-highlight/20',
+    calm: 'bg-primary/20 hover:bg-primary/30 dark:bg-primary/10 dark:hover:bg-primary/20',
+    neutral: 'bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-700 dark:hover:bg-neutral-600',
+    sad: 'bg-accent/20 hover:bg-accent/30 dark:bg-accent/10 dark:hover:bg-accent/20',
+    stressed: 'bg-destructive/20 hover:bg-destructive/30 dark:bg-destructive/10 dark:hover:bg-destructive/20'
+  };
+
+  return (
+    <motion.button
+      key={type}
+      onClick={onClick}
+      whileHover={{ y: -5 }}
+      whileTap={{ scale: 0.95 }}
+      className={`mood-btn flex-1 flex flex-col items-center p-4 rounded-2xl transition-all duration-300 ${moodColors[type]} ${selected ? 'ring-4 ring-offset-2 ring-offset-background ring-primary/70 scale-105' : ''}`}
+    >
+      <span className="text-3xl mb-2">{emoji}</span>
+      <span className="text-sm font-medium text-foreground dark:text-neutral-200">
+        {label}
+      </span>
+    </motion.button>
+  );
+};
 
 const MoodTracker = () => {
   const { 
@@ -28,57 +78,83 @@ const MoodTracker = () => {
     { type: 'sad', emoji: '😔', label: 'Sad' },
     { type: 'stressed', emoji: '😫', label: 'Stressed' }
   ];
+
+  // Animation variants for container
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  // Animation variants for items
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 }
+  };
   
   return (
     <section className="mb-8">
-      <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-6 mb-6">
-        <h3 className="font-heading font-medium text-lg mb-4 dark:text-white">
-          Today's Mood
-        </h3>
+      <motion.div 
+        className="bg-white dark:bg-neutral-800 rounded-3xl shadow-md p-6 mb-6 relative overflow-hidden"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        <MoodTrackerWave />
         
-        <div className="flex flex-wrap justify-between gap-3 mb-6">
+        <motion.h3 
+          className="font-heading font-medium text-xl mb-6 dark:text-white text-center"
+          variants={itemVariants}
+        >
+          How are you feeling right now?
+        </motion.h3>
+        
+        <motion.div 
+          className="flex flex-wrap justify-between gap-3 mb-8"
+          variants={itemVariants}
+        >
           {moods.map(mood => (
-            <button
+            <MoodButton
               key={mood.type}
+              type={mood.type}
+              emoji={mood.emoji}
+              label={mood.label}
+              selected={todayMood === mood.type}
               onClick={() => handleMoodSelect(mood.type)}
-              className={`mood-btn flex-1 flex flex-col items-center p-3 rounded-lg border-2 transition-colors ${
-                todayMood === mood.type
-                  ? 'border-primary-300 dark:border-primary-500'
-                  : 'border-neutral-200 dark:border-neutral-700 hover:border-primary-300 dark:hover:border-primary-500'
-              }`}
-            >
-              <span className="text-2xl mb-1">{mood.emoji}</span>
-              <span className="text-sm text-neutral-600 dark:text-neutral-400">
-                {mood.label}
-              </span>
-            </button>
+            />
           ))}
-        </div>
+        </motion.div>
         
-        <div>
+        <motion.div variants={itemVariants}>
           <label 
             htmlFor="moodNote" 
-            className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5"
+            className="block text-sm font-medium text-primary-foreground dark:text-neutral-300 mb-3"
           >
-            What's on your mind today?
+            Would you like to share more about how you're feeling?
           </label>
           <textarea 
             id="moodNote" 
             value={todayNote}
             onChange={(e) => setTodayNote(e.target.value)}
             rows={3} 
-            className="w-full px-3 py-2 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 outline-none transition" 
-            placeholder="Write your thoughts here..."
+            className="w-full px-4 py-3 rounded-2xl border border-primary/20 dark:border-primary/10 bg-white dark:bg-neutral-800 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" 
+            placeholder="Write your thoughts here... (optional)"
           />
-          <div className="flex justify-end mt-3">
-            <button 
+          <div className="flex justify-end mt-4">
+            <motion.button 
               onClick={handleSave}
               disabled={!todayMood || isAddingEntry}
-              className={`px-4 py-2 ${
+              whileHover={{ scale: !todayMood || isAddingEntry ? 1 : 1.05 }}
+              whileTap={{ scale: !todayMood || isAddingEntry ? 1 : 0.95 }}
+              className={`px-6 py-2.5 ${
                 !todayMood
-                  ? 'bg-neutral-400 cursor-not-allowed'
-                  : 'bg-primary-500 hover:bg-primary-600'
-              } text-white rounded-lg transition-colors flex items-center gap-2`}
+                  ? 'bg-neutral-300 dark:bg-neutral-600 cursor-not-allowed'
+                  : 'bg-primary hover:bg-primary/90'
+              } text-primary-foreground dark:text-white rounded-full shadow-sm transition-all duration-300 flex items-center gap-2 font-medium`}
             >
               {isAddingEntry ? (
                 <>
@@ -89,12 +165,12 @@ const MoodTracker = () => {
                   Saving...
                 </>
               ) : (
-                'Save'
+                'Save Entry'
               )}
-            </button>
+            </motion.button>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 };
