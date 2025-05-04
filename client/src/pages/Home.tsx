@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
-import MoodTracker from '@/components/MoodTracker';
 import MoodGraph from '@/components/MoodGraph';
 import QuoteCard from '@/components/QuoteCard';
 import BreathingExercise from '@/components/BreathingExercise';
@@ -9,12 +8,14 @@ import SelfCareChecklist from '@/components/SelfCareChecklist';
 import SoundPlayer from '@/components/SoundPlayer';
 import ChatWithAI from '@/components/ChatWithAI';
 import CommunityBoard from '@/components/CommunityBoard';
+import WelcomeExperience from '@/components/WelcomeExperience';
 import { getCurrentUser } from '@/lib/firebase';
 
 const Home = () => {
   const [greeting, setGreeting] = useState('Good day');
   const [userDisplayName, setUserDisplayName] = useState('');
   const [userInitials, setUserInitials] = useState('');
+  const [showFeatures, setShowFeatures] = useState(false);
 
   useEffect(() => {
     // Set greeting based on time of day
@@ -49,6 +50,13 @@ const Home = () => {
       setUserDisplayName('Friend');
       setUserInitials('AN');
     }
+
+    // Show features after a delay to allow the welcome experience to be appreciated
+    const timer = setTimeout(() => {
+      setShowFeatures(true);
+    }, 12000); // 12 seconds
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -56,29 +64,20 @@ const Home = () => {
       <Header userDisplayName={userDisplayName} userInitials={userInitials} />
       
       <main className="flex-1 container mx-auto px-4 py-6 pb-20 md:pb-6">
-        {/* Welcome message */}
-        <div className="mb-8">
-          <h2 className="font-heading font-medium text-2xl mb-2 dark:text-white">
-            {greeting}, <span>{userDisplayName}</span> 👋
-          </h2>
-          <p className="text-neutral-600 dark:text-neutral-400">
-            How are you feeling today?
-          </p>
-        </div>
+        {/* Welcome Experience with Carousel and Quote */}
+        <WelcomeExperience greeting={greeting} userDisplayName={userDisplayName} />
 
-        {/* Today's mood section */}
-        <MoodTracker />
-
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <MoodGraph />
-          <QuoteCard />
-          <BreathingExercise />
-          <SelfCareChecklist />
-          <SoundPlayer />
-          <ChatWithAI />
-          <CommunityBoard />
-        </div>
+        {/* Features Grid - Only shown after welcome experience */}
+        {showFeatures && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fadeIn">
+            <MoodGraph />
+            <BreathingExercise />
+            <SelfCareChecklist />
+            <SoundPlayer />
+            <ChatWithAI />
+            <CommunityBoard />
+          </div>
+        )}
       </main>
 
       <BottomNav />
