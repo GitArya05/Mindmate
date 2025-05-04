@@ -1,17 +1,21 @@
 import { useSoundStore } from '@/hooks/useSoundStore';
+import FeatureContainer from './FeatureContainer';
+
+// Sound icon for the feature container
+const SoundIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+    <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
+  </svg>
+);
 
 const SoundPlayer = () => {
   const { sounds, currentSound, playSound } = useSoundStore();
   
   return (
-    <div className="card bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-6 col-span-1">
-      <h3 className="font-heading font-medium text-lg mb-4 dark:text-white">
-        Relaxation Sounds
-      </h3>
-      
+    <FeatureContainer title="Relaxation Sounds" icon={<SoundIcon />}>
       <div className="space-y-4">
         {/* Featured sound with image */}
-        <div className="relative overflow-hidden rounded-lg h-36 group">
+        <div className="relative overflow-hidden rounded-xl h-36 md:h-48 lg:h-60 group shadow-sm">
           <img 
             src={currentSound?.image || sounds[0]?.image} 
             alt={currentSound?.name || sounds[0]?.name} 
@@ -25,7 +29,7 @@ const SoundPlayer = () => {
               <div className="flex justify-between items-center">
                 <button 
                   onClick={() => playSound(currentSound?.id || sounds[0]?.id)}
-                  className="text-white p-2 rounded-full bg-primary-500/80 hover:bg-primary-500"
+                  className="text-white p-2 rounded-full bg-primary hover:bg-primary/90 transition-colors"
                 >
                   {currentSound?.isPlaying ? (
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -40,7 +44,7 @@ const SoundPlayer = () => {
                 </button>
                 <div className="w-2/3 bg-white/30 rounded-full h-1.5">
                   <div 
-                    className="bg-white h-1.5 rounded-full" 
+                    className="bg-white h-1.5 rounded-full transition-all duration-1000" 
                     style={{ width: `${currentSound?.isPlaying ? currentSound?.progress : 0}%` }}
                   ></div>
                 </div>
@@ -50,16 +54,16 @@ const SoundPlayer = () => {
         </div>
         
         {/* Sound selection buttons */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {sounds.map(sound => (
             <button 
               key={sound.id}
               onClick={() => playSound(sound.id)}
-              className={`p-3 rounded-lg ${
+              className={`p-3 rounded-xl transition-all duration-300 text-sm flex flex-col md:flex-row items-center justify-center gap-2 ${
                 sound.isPlaying 
-                  ? 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300' 
-                  : 'bg-neutral-100 dark:bg-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-600 text-neutral-700 dark:text-neutral-300'
-              } transition-colors text-sm flex items-center justify-center gap-2`}
+                  ? 'bg-primary/20 dark:bg-primary/30 text-primary-foreground dark:text-primary-foreground shadow-md scale-105' 
+                  : 'bg-neutral-100 dark:bg-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-600 text-foreground dark:text-neutral-300 hover:scale-105'
+              }`}
             >
               {sound.id === 'rain' && (
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -92,7 +96,7 @@ const SoundPlayer = () => {
           ))}
         </div>
       </div>
-    </div>
+    </FeatureContainer>
   );
 };
 
